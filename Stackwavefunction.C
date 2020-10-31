@@ -15,6 +15,7 @@ Sandeep Sharma and Garnet K.-L. Chan
 #include "pario.h"
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
 
 
 long SpinAdapted::getRequiredMemoryForWavefunction(const StateInfo& sr, const StateInfo& sc, const std::vector<SpinQuantum>& q) {

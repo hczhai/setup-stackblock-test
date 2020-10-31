@@ -128,7 +128,7 @@ namespace SpinAdapted{
 
 #ifndef SERIAL
   mpi::communicator world;
-  MPI::COMM_WORLD.Bcast(solution[0].get_data(), solution[0].memoryUsed(), MPI_DOUBLE, 0);
+  MPI_Bcast(solution[0].get_data(), solution[0].memoryUsed(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
 #endif
 
   std::vector<Matrix> rotateMatrix;
