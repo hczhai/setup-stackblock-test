@@ -1,3 +1,4 @@
 *.o
 build/
+my_test/
 .vscode/

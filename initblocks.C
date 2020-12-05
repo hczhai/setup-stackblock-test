@@ -205,9 +205,9 @@ void SpinAdapted::InitBlocks::InitNewEnvironmentBlock(StackSpinBlock &environmen
 	      environmentActive.set_integralIndex() = integralIndex;
 	      environmentCore.set_integralIndex() = integralIndex;
         environmentActive.default_op_components(!forward, leftState==rightState);
-        environmentActive.setstoragetype(DISTRIBUTED_STORAGE);
+        environmentActive.setstoragetype(LOCAL_STORAGE);
         environmentCore.default_op_components(!forward, leftState==rightState);      
-        environmentCore.setstoragetype(DISTRIBUTED_STORAGE);
+        environmentCore.setstoragetype(LOCAL_STORAGE);
 
         environmentActive.BuildTensorProductBlock(activeSites);
         environmentCore.BuildSingleSlaterBlock(coreSites);
@@ -404,9 +404,9 @@ void SpinAdapted::InitBlocks::InitNewEnvironmentBlock(StackSpinBlock &environmen
 	      environmentActive.set_integralIndex() = integralIndex;
 	      environmentCore.set_integralIndex() = integralIndex;
         environmentActive.default_op_components(!forward, leftState==rightState);
-        environmentActive.setstoragetype(DISTRIBUTED_STORAGE);
+        environmentActive.setstoragetype(LOCAL_STORAGE);
         environmentCore.default_op_components(!forward, leftState==rightState);      
-        environmentCore.setstoragetype(DISTRIBUTED_STORAGE);
+        environmentCore.setstoragetype(LOCAL_STORAGE);
 
         environmentActive.BuildTensorProductBlock(activeSites);
         environmentCore.BuildSingleSlaterBlock(coreSites);
