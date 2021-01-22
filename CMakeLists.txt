@@ -7,7 +7,14 @@ SET(MPI ON)
 FIND_PROGRAM(CMAKE_C_COMPILER NAMES $ENV{CC} gcc PATHS ENV PATH NO_DEFAULT_PATH)
 FIND_PROGRAM(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PATH)
 
-SET(PROJECT_NAME block.spin_adapted)
+IF (${BUILD_OH})
+    SET(PROJECT_NAME OH)
+ELSEIF (${BUILD_GAOPT})
+    SET(PROJECT_NAME gaopt)
+ELSE()
+    SET(PROJECT_NAME block.spin_adapted)
+ENDIF()
+
 PROJECT(${PROJECT_NAME} VERSION 1.5.3)
 
 MESSAGE(STATUS "PROJECT_NAME = ${PROJECT_NAME}")
@@ -81,6 +88,20 @@ SET(SRCS saveBlock.C Stackspinblock.C operatorUtilities.C Stack_op_components.C 
     renormalise.C couplingCoeffs.C distribute.C new_anglib.C fci.C IrrepSpace.C modules/generate_blocks/sweep.C
     ${SRC_genetic} SpinSpace.C include/IntegralMatrix.C modules/onepdm/sweep.C modules/onepdm/onepdm.C
     ${SRC_npdm} ${SRC_mps_nevpt} fciqmchelper.C)
+
+IF (${BUILD_OH})
+    SET(SRCS wrapper.C fciqmchelper.C saveBlock.C Stackspinblock.C operatorUtilities.C Stack_op_components.C
+        stackguess_wavefunction.C Stackwavefunction.C Stackdensity.C stackopxop.C StackBaseOperator.C StackOperators.C
+        modules/ResponseTheory/sweepResponse.C modules/ResponseTheory/sweepCompress.C pario.C dmrg.C fiedler.C
+        least_squares.C sweep_mps.C set_stackspinblock_components.C linear.C readinput.C  timer.C SpinQuantum.C Symmetry.C
+        input.C hfOccGenerator.C Schedule.C orbstring.C slater.C csf.C StateInfo.C  screen.C MatrixBLAS.C
+        operatorfunctions.C solver.C davidson.C sweep_params.C sweep.C partial_sweep.C BlockAndDecimate.C initblocks.C
+        rotationmat.C renormalise.C couplingCoeffs.C distribute.C new_anglib.C fci.C IrrepSpace.C
+        modules/generate_blocks/sweep.C ${SRC_genetic} SpinSpace.C include/IntegralMatrix.C modules/onepdm/sweep.C
+        modules/onepdm/onepdm.C ${SRC_npdm} OverlapHelement.C ${SRC_mps_nevpt})
+ELSEIF (${BUILD_GAOPT})
+    SET(SRCS genetic/main.C genetic/fiedler.C ${SRC_genetic})
+ENDIF()
 
 SET(INCL . newmat10 include modules/generate_blocks modules/onepdm modules/twopdm modules/npdm
     modules/two_index_ops modules/three_index_ops modules/four_index_ops
