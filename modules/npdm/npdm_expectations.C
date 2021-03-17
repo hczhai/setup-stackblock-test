@@ -660,7 +660,7 @@ void Npdm_expectations::AllocateInitialiseWavefunctions(NpdmSpinOps_base & rhsOp
 {
   
   StackSparseMatrix* null = 0; 
-  vector<SpinQuantum> dQ = wavefunction_0.get_deltaQuantum();
+  vector<SpinQuantum> dQ = wavefunction_1.get_deltaQuantum();
   assert(dQ.size()==1 );
   assert(dQ[0].totalSpin.getirrep()== 0);
   int rindices= &rhsOps ? rhsOps.indices_.size(): 0;

@@ -115,7 +115,10 @@ void npdm_block_and_decimate( Npdm_driver_base& npdm_driver, SweepParams &sweepP
   else{
     solution.resize(2);
     DiagonalMatrix e;
-    solution[0].initialise(dmrginp.effective_molecule_quantum_vec(), big.get_leftBlock()->get_braStateInfo(), big.get_rightBlock()->get_braStateInfo(), true);
+    if(dmrginp.transition_diff_irrep())
+      solution[0].initialise(dmrginp.bra_quantum_vec(), big.get_leftBlock()->get_braStateInfo(), big.get_rightBlock()->get_braStateInfo(), true);
+    else
+      solution[0].initialise(dmrginp.effective_molecule_quantum_vec(), big.get_leftBlock()->get_braStateInfo(), big.get_rightBlock()->get_braStateInfo(), true);
     solution[1].initialise(dmrginp.effective_molecule_quantum_vec(), big.get_leftBlock()->get_ketStateInfo(), big.get_rightBlock()->get_ketStateInfo(), true);
     solution[0].Clear();
     solution[1].Clear();
