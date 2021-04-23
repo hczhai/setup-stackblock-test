@@ -68,6 +68,8 @@ void SpinAdapted::Sweep::CanonicalizeWavefunction(SweepParams &sweepParams, cons
     
   //only need statinfos
   StateInfo stateInfo1; makeStateInfo(stateInfo1, new_site);
+
+  StateInfo::store(forward, sites, stateInfo1, currentstate);
   
   for (; sweepParams.get_block_iter() < sweepParams.get_n_iters(); ) {
       

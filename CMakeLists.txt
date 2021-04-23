@@ -9,6 +9,8 @@ FIND_PROGRAM(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PA
 
 IF (${BUILD_OH})
     SET(PROJECT_NAME OH)
+ELSEIF (${BUILD_READROT})
+    SET(PROJECT_NAME read_rot)
 ELSEIF (${BUILD_GAOPT})
     SET(PROJECT_NAME gaopt)
 ELSE()
@@ -99,6 +101,16 @@ IF (${BUILD_OH})
         rotationmat.C renormalise.C couplingCoeffs.C distribute.C new_anglib.C fci.C IrrepSpace.C
         modules/generate_blocks/sweep.C ${SRC_genetic} SpinSpace.C include/IntegralMatrix.C modules/onepdm/sweep.C
         modules/onepdm/onepdm.C ${SRC_npdm} OverlapHelement.C ${SRC_mps_nevpt})
+ELSEIF (${BUILD_READROT})
+    SET(SRCS wrapper.C fciqmchelper.C saveBlock.C Stackspinblock.C operatorUtilities.C Stack_op_components.C
+        stackguess_wavefunction.C Stackwavefunction.C Stackdensity.C stackopxop.C StackBaseOperator.C StackOperators.C
+        modules/ResponseTheory/sweepResponse.C modules/ResponseTheory/sweepCompress.C pario.C dmrg.C fiedler.C
+        least_squares.C sweep_mps.C set_stackspinblock_components.C linear.C readinput.C  timer.C SpinQuantum.C Symmetry.C
+        input.C hfOccGenerator.C Schedule.C orbstring.C slater.C csf.C StateInfo.C  screen.C MatrixBLAS.C
+        operatorfunctions.C solver.C davidson.C sweep_params.C sweep.C partial_sweep.C BlockAndDecimate.C initblocks.C
+        rotationmat.C renormalise.C couplingCoeffs.C distribute.C new_anglib.C fci.C IrrepSpace.C
+        modules/generate_blocks/sweep.C ${SRC_genetic} SpinSpace.C include/IntegralMatrix.C modules/onepdm/sweep.C
+        modules/onepdm/onepdm.C ${SRC_npdm} readrotationmatrix.C ${SRC_mps_nevpt})
 ELSEIF (${BUILD_GAOPT})
     SET(SRCS genetic/main.C genetic/fiedler.C ${SRC_genetic})
 ENDIF()
