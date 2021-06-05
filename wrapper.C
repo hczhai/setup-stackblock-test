@@ -48,7 +48,8 @@ void CollapseToDeterminant(char* s, int stateIndex) {
 
 void ReadInputFromC(char* conf, int outputlevel) {
   ReadInput(conf);
-  dmrginp.setOutputlevel() = outputlevel;
+  if (outputlevel != -2)
+    dmrginp.setOutputlevel() = outputlevel;
   dmrginp.initCumulTimer();
   MAX_THRD = dmrginp.thrds_per_node()[mpigetrank()];
   int mkl_thrd = dmrginp.mkl_thrds();
@@ -224,7 +225,7 @@ void test(char* infile)
 
   int nstates;
   std::vector<int> states;
-  if (mpigetrank() == 0) {
+  if (mpigetrank() == 0 && infile != nullptr) {
     ifstream file(infile);
     int stateindex ;
     while(file >> stateindex) {
@@ -233,6 +234,9 @@ void test(char* infile)
 	printf("reading state %i\n", stateindex);
     }
     file.close();
+  } else {
+    states.push_back(0);
+    printf("reading default state 0\n");
   }
 #ifndef SERIAL
   boost::mpi::communicator world;
@@ -250,20 +254,20 @@ void test(char* infile)
       printf("starting row : %i\n", i);
     for (int j=0; j<=i; j++) {
       double h=0,o=0;
-      calcHamiltonianAndOverlap(states[i], states[j], h, o);
+      calcHamiltonianAndOverlap(states[i], states[j], h, o, i==j, 0);
       ham[i][j] = h; ham[j][i] = h;
       Overlap[i][j] = o; Overlap[j][i] = o;
       if (mpigetrank() == 0) 
-	printf("%i %i  %18.9e  %18.9e\n", i, j, h, o); 
+        printf("%i %i  %18.9e  %18.9e\n", i, j, h, o); 
     }
   }
   
   if(mpigetrank() == 0) {
     printf("printing hamiltonian\n");
     for (int i=0; i<nstates; i++) {
-      for (int j=0; j<nstates; j++) 
-	printf("%18.9e ", ham[i][j]);
-      printf("\n");
+      for (int j=0; j<nstates; j++)
+        pout << fixed << setprecision(10) << ham[i][j];
+      pout << endl;
     }
 
     /*
@@ -279,9 +283,9 @@ void test(char* infile)
     printf("\n");
     printf("printing overlap\n");
     for (int i=0; i<nstates; i++) {
-      for (int j=0; j<nstates; j++) 
-	printf("%18.9e ", Overlap[i][j]);
-      printf("\n");
+      for (int j=0; j<nstates; j++)
+        pout << fixed << setprecision(10) << Overlap[i][j];
+      pout << endl;
     }
   }
 }

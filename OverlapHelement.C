@@ -24,7 +24,7 @@ int main(int argc, char* argv []) {
 
 #endif
   initBoostMPI(argc, argv);
-  ReadInputFromC(argv[1], 0);
+  ReadInputFromC(argv[1], -2);
   dmrginp.matmultFlops.resize(numthrds, 0.);
 
   double* stackmemory = new double[dmrginp.getMemory()];
