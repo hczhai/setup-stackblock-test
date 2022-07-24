@@ -27,14 +27,14 @@ sed -i "/DPYTHON_EXECUTABLE/a \                '-DPYTHON_EXECUTABLE=${PY_EXE}',"
 
 yum install -y wget
 PREFIX=$PWD
-wget https://boostorg.jfrog.io/artifactory/main/release/1.63.0/source/boost_1_63_0.tar.gz
-tar zxf boost_1_63_0.tar.gz
-cd boost_1_63_0
+wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz
+tar zxf boost_1_76_0.tar.gz
+cd boost_1_76_0
 bash bootstrap.sh
 cd ..
 
 if [ "${PARALLEL}" = "mpi" ]; then
-    cd boost_1_63_0
+    cd boost_1_76_0
     echo 'using mpi ;' >> project-config.jam
     cd ..
     yum install -y openssh-clients openssh-server
@@ -54,12 +54,12 @@ if [ "${PARALLEL}" = "mpi" ]; then
     sed -i '/for soname, src_path/a \                if "libmpi.so" in soname: patcher.replace_needed(fn, soname, "libmpi.so")' \
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 
-    cd boost_1_63_0
-    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi
+    cd boost_1_76_0
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python
     export BOOSTROOT=$PREFIX
     cd ..
 else
-    cd boost_1_63_0
+    cd boost_1_76_0
     ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization
     export BOOSTROOT=$PREFIX
     cd ..
