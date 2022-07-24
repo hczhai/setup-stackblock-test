@@ -478,13 +478,19 @@ namespace SpinAdapted{
 
     StackWavefunction temp; temp.initialise(stateaw);
     temp.Clear();
+#ifndef SERIAL
     calc.barrier();
+#endif
     big.multiplyH_2index(statebw, &temp, 1);
+#ifndef SERIAL
     calc.barrier();
     if (mpigetrank() == 0)
+#endif
       h = DotProduct(stateaw, temp);
 
+#ifndef SERIAL
     calc.barrier();
+#endif
     temp.Clear();
 
     big.multiplyOverlap(statebw, &temp, 1);

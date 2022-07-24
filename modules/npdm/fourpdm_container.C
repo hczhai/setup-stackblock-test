@@ -10,7 +10,6 @@ Sandeep Sharma and Garnet K.-L. Chan
 #include <boost/format.hpp>
 #include "fourpdm_container.h"
 #include "npdm_permutations.h"
-#include <boost/range/algorithm.hpp>
 #include <boost/filesystem.hpp>
 
 namespace SpinAdapted{
@@ -159,7 +158,8 @@ void Fourpdm_container::save_npdm_binary(const int &i, const int &j)
 void Fourpdm_container::external_sort_index(const int &i, const int &j)
 {
 
-  boost::sort(nonspin_batch);
+  std::sort(nonspin_batch.begin(), nonspin_batch.end());
+  // boost::sort(nonspin_batch);
 #ifndef SERIAL
   boost::mpi::communicator world;
   if(mpigetrank() != 0){
