@@ -108,6 +108,10 @@ IF (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     SET(OPT_FLAG ${OPT_FLAG} -Wno-absolute-value -Wno-undefined-bool-conversion -Wno-dangling-else)
 ENDIF()
 
+IF (APPLE)
+    SET(OPT_FLAG ${OPT_FLAG} -DNO_SHARED_MEM)
+ENDIF()
+
 IF ((NOT APPLE) AND (NOT WIN32) AND (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")))
     SET(OPT_FLAG ${OPT_FLAG} -Wno-psabi)
 ENDIF()

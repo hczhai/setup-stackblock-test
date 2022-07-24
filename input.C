@@ -1854,6 +1854,12 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile, OneElectronArray&
   mpi::broadcast(world,oneIntegralMem,0);
   mpi::broadcast(world,twoIntegralMem,0);
 #endif
+#ifdef NO_SHARED_MEM
+  long integralMemorySize = (oneIntegralMem+twoIntegralMem)*m_num_Integrals;
+  m_IntegralMemoryStart = Stackmem[0].allocate(integralMemorySize);
+  v1.set_data() = (m_IntegralMemoryStart) + (oneIntegralMem+twoIntegralMem)*integralIndex;
+  v2.set_data() = (m_IntegralMemoryStart) + oneIntegralMem + (oneIntegralMem+twoIntegralMem)*integralIndex;
+#else
   if (m_useSharedMemory) {
     if (integralIndex == 0) {
       segment.truncate((oneIntegralMem+twoIntegralMem)*m_num_Integrals*sizeof(double)); 
@@ -1873,6 +1879,7 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile, OneElectronArray&
     v1.set_data() = (m_IntegralMemoryStart) + (oneIntegralMem+twoIntegralMem)*integralIndex;
     v2.set_data() = (m_IntegralMemoryStart) + oneIntegralMem + (oneIntegralMem+twoIntegralMem)*integralIndex;
   }
+#endif
   if (rank == 0) {
     msg.resize(0);
     ReadMeaningfulLine(dumpFile, msg, msgsize); //this if the first line with integrals
@@ -2190,6 +2197,14 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile, OneElectronArray&
 
   long intdim = oneIntegralMem+vccIntegralMem+twoIntegralMem+vccccIntegralMem+vcccdIntegralMem;
 
+#ifdef NO_SHARED_MEM
+  double *m_int_start = new double[intdim*m_num_Integrals];
+  v1.set_data() = m_int_start + intdim*integralIndex;
+  vcc.set_data() = m_int_start + oneIntegralMem + intdim*integralIndex;
+  v2.set_data() = m_int_start + oneIntegralMem + vccIntegralMem + intdim*integralIndex;
+  vcccc.set_data() = m_int_start + oneIntegralMem + vccIntegralMem + twoIntegralMem + intdim*integralIndex;
+  vcccd.set_data() = m_int_start + oneIntegralMem + vccIntegralMem + twoIntegralMem + vccccIntegralMem + intdim*integralIndex;
+#else
   if (integralIndex == 0) {
     segment.truncate(intdim*m_num_Integrals*sizeof(double)); 
     region = boost::interprocess::mapped_region{segment, boost::interprocess::read_write};
@@ -2204,6 +2219,7 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile, OneElectronArray&
   v2.set_data() = static_cast<double*>(region.get_address()) + oneIntegralMem + vccIntegralMem + intdim*integralIndex;
   vcccc.set_data() = static_cast<double*>(region.get_address()) + oneIntegralMem + vccIntegralMem + twoIntegralMem + intdim*integralIndex;
   vcccd.set_data() = static_cast<double*>(region.get_address()) + oneIntegralMem + vccIntegralMem + twoIntegralMem + vccccIntegralMem + intdim*integralIndex;
+#endif
 
   if (rank == 0) {
     int section = 0;
@@ -2572,6 +2588,11 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile,OneElectronArray& 
   mpi::broadcast(world,PerturboneIntegralMem,0);
 #endif
 
+#ifdef NO_SHARED_MEM
+    v1.set_data() = new double[(oneIntegralMem+twoIntegralMem+PerturboneIntegralMem)*m_num_Integrals];
+    v2.set_data() = v1.set_data() + oneIntegralMem;
+    vpt1.set_data() = v1.set_data() + oneIntegralMem + twoIntegralMem;
+#else
 #ifndef SERIAL
     segment.truncate((oneIntegralMem+twoIntegralMem+PerturboneIntegralMem)*m_num_Integrals*sizeof(double)); 
     region = boost::interprocess::mapped_region{segment, boost::interprocess::read_write};
@@ -2587,6 +2608,7 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile,OneElectronArray& 
     v1.set_data() = new double[(oneIntegralMem+twoIntegralMem+PerturboneIntegralMem)*m_num_Integrals];
     v2.set_data() = v1.set_data() + oneIntegralMem;
     vpt1.set_data() = v1.set_data() + oneIntegralMem + twoIntegralMem;
+#endif
 #endif
 
   if (mpigetrank() == 0) {

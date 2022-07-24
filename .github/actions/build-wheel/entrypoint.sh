@@ -27,14 +27,14 @@ sed -i "/DPYTHON_EXECUTABLE/a \                '-DPYTHON_EXECUTABLE=${PY_EXE}',"
 
 yum install -y wget
 PREFIX=$PWD
-wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz
-tar zxf boost_1_76_0.tar.gz
-cd boost_1_76_0
+wget https://boostorg.jfrog.io/artifactory/main/release/1.63.0/source/boost_1_63_0.tar.gz
+tar zxf boost_1_63_0.tar.gz
+cd boost_1_63_0
 bash bootstrap.sh
 cd ..
 
 if [ "${PARALLEL}" = "mpi" ]; then
-    cd boost_1_76_0
+    cd boost_1_63_0
     echo 'using mpi ;' >> project-config.jam
     cd ..
     yum install -y openssh-clients openssh-server
@@ -55,9 +55,9 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 fi
 
-cd boost_1_76_0
+cd boost_1_63_0
 ./b2 install --prefix=$PREFIX
-export BOOSTROOT=~/program/boost-1.76
+export BOOSTROOT=$PREFIX
 cd ..
 
 sed -i '/new_soname = src_name/a \    if any(x in src_name for x in ["libmkl_avx2", "libmkl_avx512"]): new_soname = src_name' \

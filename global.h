@@ -54,8 +54,10 @@ class PerturbTwoElectronArray;
 enum OnePerturbType;
 enum TwoPerturbType;
 
+#ifndef NO_SHARED_MEM
 extern boost::interprocess::shared_memory_object segment;
 extern boost::interprocess::mapped_region region;
+#endif
 
 extern int CACHEBUFFER;
 extern int MAX_THRD;

@@ -116,8 +116,10 @@ namespace SpinAdapted{
   std::vector<int> NPROP;
   int PROPBITLEN=1;
 
+#ifndef NO_SHARED_MEM
   boost::interprocess::shared_memory_object segment(boost::interprocess::open_or_create, ("Integrals" + to_string(time(NULL) % 1000000)).c_str(), boost::interprocess::read_write);
   boost::interprocess::mapped_region region;
+#endif
 
   std::vector<StackAllocator<double> > Stackmem;
 #ifndef SERIAL
