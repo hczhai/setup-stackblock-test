@@ -126,13 +126,13 @@ build.sub_commands = ([c for c in build.sub_commands if c[0] == 'build_ext'] +
 setup(name='stackblock',
     version='0.0.1',
     packages=find_packages(),
-    ext_modules=[CMakeExt('block2.spin_adapted')],
+    ext_modules=[CMakeExt('block.spin_adapted')],
     cmdclass={'build_ext': CMakeBuild, 'build_scripts': BinBuild},
     license='LICENSE',
     description="stackblock",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Unknown',
-    scripts=["block2.spin_adapted"],
+    scripts=["block.spin_adapted"],
     install_requires=[]
 )

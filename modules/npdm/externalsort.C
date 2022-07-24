@@ -1,4 +1,5 @@
 #include <boost/format.hpp>
+#include <boost/range/algorithm.hpp>
 #include "global.h"
 //#include <boost/mpi.hpp>
 //#include <boost/mpi/environment.hpp>

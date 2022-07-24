@@ -24,12 +24,17 @@ sed -i "/DPYTHON_EXECUTABLE/a \                '-DPYTHON_EXECUTABLE=${PY_EXE}',"
 
 /opt/python/"${PY_VER}"/bin/pip install --upgrade --no-cache-dir pip
 /opt/python/"${PY_VER}"/bin/pip install --no-cache-dir mkl==2019 mkl-include intel-openmp cmake==3.17
-yum install -y boost-devel
+
+yum install -y wget
+PREFIX=$PWD
+wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz
+tar zxf boost_1_76_0.tar.gz
+cd boost_1_76_0
+bash bootstrap.sh
 
 if [ "${PARALLEL}" = "mpi" ]; then
-    # yum makecache
-    yum install -y boost-openmpi
-    yum install -y wget openssh-clients openssh-server
+    echo 'using mpi ;' >> project-config.jam
+    yum install -y openssh-clients openssh-server
     wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.6.tar.gz
     tar zxf openmpi-4.0.6.tar.gz
     cd openmpi-4.0.6
@@ -47,7 +52,10 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 fi
 
-sed -i '/DUSE_MKL/a \                "-DBOOST_VERY_OLD=ON",' setup.py
+./b2 install --prefix=$PREFIX
+export BOOSTROOT=~/program/boost-1.76
+cd ..
+
 sed -i '/new_soname = src_name/a \    if any(x in src_name for x in ["libmkl_avx2", "libmkl_avx512"]): new_soname = src_name' \
     $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 ${PY_EXE} -c 'import site; x = site.getsitepackages(); x += [xx.replace("site-packages", "dist-packages") for xx in x]; print("*".join(x))' > /tmp/ptmp

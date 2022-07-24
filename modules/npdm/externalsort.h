@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include <boost/format.hpp>
+#include <boost/range/algorithm.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
@@ -287,8 +288,7 @@ void externalsort(char* inputfilename, char* outputfilename, long number_of_data
     else if( read_size != Buff_SIZE) read_success =false;
 
     std::vector<index_element> sortedpiece(onepiece,onepiece+read_size);
-    std::sort(sortedpiece.begin(),sortedpiece.end());
-    // boost::sort(sortedpiece);
+    boost::sort(sortedpiece);
     std::copy(sortedpiece.begin(),sortedpiece.end(),onepiece);
   //  loaddata >> onepiece;
     //file >> onepiece.index;
