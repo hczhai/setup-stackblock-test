@@ -448,7 +448,11 @@ void SpinAdapted::mps_nevpt::type1::cleanup(int left, int right, int cleanlevel)
   std::vector<boost::filesystem::path> deletefiles;
   while(iter!=boost::filesystem::directory_iterator())
   {
-    if(iter->path().filename().string().find("Block-")==0)
+#ifdef BOOST_VERY_OLD
+	if(iter->path().filename().find("Block-")==0)
+#else
+	if(iter->path().filename().string().find("Block-")==0)
+#endif
       deletefiles.push_back(*iter);
     iter++;
   }

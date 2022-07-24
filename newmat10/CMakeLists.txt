@@ -10,6 +10,10 @@ ADD_LIBRARY(${PROJECT_NAME} STATIC newmat1.cpp newmat2.cpp newmat3.cpp newmat4.c
     newmat7.cpp newmat8.cpp newmatex.cpp bandmat.cpp submat.cpp myexcept.cpp cholesky.cpp evalue.cpp
     fft.cpp hholder.cpp jacobi.cpp newfft.cpp sort.cpp svd.cpp newmatrm.cpp newmat9.cpp)
 
-TARGET_COMPILE_OPTIONS(${PROJECT_NAME} BEFORE PRIVATE -fPIC -O2 -Wall -Wno-misleading-indentation -Wno-terminate)
+IF (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    SET(NW_OPT_FLAG -Wno-overloaded-virtual)
+ENDIF()
+
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} BEFORE PRIVATE -fPIC -O2 -Wall -Wno-misleading-indentation -Wno-terminate ${NW_OPT_FLAG})
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE .)
 

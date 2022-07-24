@@ -45,7 +45,7 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 fi
 
-sed -i "/DUSE_MKL/a \                '-DBOOST_OLD=ON'," setup.py
+sed -i "/DUSE_MKL/a \                '-DBOOST_VERY_OLD=ON'," setup.py
 sed -i '/new_soname = src_name/a \    if any(x in src_name for x in ["libmkl_avx2", "libmkl_avx512"]): new_soname = src_name' \
     $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 ${PY_EXE} -c 'import site; x = site.getsitepackages(); x += [xx.replace("site-packages", "dist-packages") for xx in x]; print("*".join(x))' > /tmp/ptmp
