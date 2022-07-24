@@ -51,6 +51,7 @@ jobs:
         run: |
           brew update
           brew install libomp
+          brew install boost
           echo ${TAG_STRING:11}
           sed -i "" "s/version=.*/version='${TAG_STRING:11}',/" setup.py
           python -m pip install wheel
