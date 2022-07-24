@@ -52,10 +52,10 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 
     cd boost_1_76_0
-    echo "using mpi ;" >> project-config.jam
     PY_INCLUDE=$(echo /opt/python/${PY_VER}/include/python*)
     echo "using python : ${PYTHON_VERSION} : /opt/python/${PY_VER} : ${PY_INCLUDE} ;" >> project-config.jam
-    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python
+    echo "using mpi ;" >> project-config.jam
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python=python3
     export BOOSTROOT=$PREFIX
     cd ..
 else
