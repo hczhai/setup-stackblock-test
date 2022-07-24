@@ -209,11 +209,7 @@ void SpinAdapted::StackWavefunction::CopyState(int from, int to) {
       if ( is_directory(itr->status()) )
 	  continue;
       else {
-#ifdef BOOST_VERY_OLD
-	string filename = itr->path().filename();
-#else
 	string filename = itr->path().filename().string();
-#endif
 	int len = filename.length();
 	string wavesubstrfrom = "."+to_string(from)+".tmp";
 	string wavesubstrto = "."+to_string(to)+".tmp";
@@ -232,11 +228,7 @@ void SpinAdapted::StackWavefunction::CopyState(int from, int to) {
 	  copy_file(frompath, topath,boost::filesystem::copy_option::overwrite_if_exists);
 	}
 
-#ifdef BOOST_VERY_OLD
-	string filename2 = itr->path().filename();
-#else
 	string filename2 = itr->path().filename().string();
-#endif
 	string rotsubstrfrom = ".state"+to_string(from)+".tmp";
 	string rotsubstrto = ".state"+to_string(to)+".tmp";
 	std::size_t found2 = filename2.find(rotsubstrfrom);
@@ -277,11 +269,7 @@ void SpinAdapted::StackWavefunction::ChangeLastSite(int newLast, int oldLast, in
       if ( is_directory(itr->status()) )
 	  continue;
       else {
-#ifdef BOOST_VERY_OLD
-	string filename = itr->path().filename();
-#else
 	string filename = itr->path().filename().string();
-#endif
 	int len = filename.length();
 	string wavesubstrfrom = to_string(oldLast)+"."+to_string(mpigetrank())+"."+to_string(state)+".tmp";
 	string wavesubstrto   = to_string(newLast)+"."+to_string(mpigetrank())+"."+to_string(state)+".tmp";
@@ -300,11 +288,7 @@ void SpinAdapted::StackWavefunction::ChangeLastSite(int newLast, int oldLast, in
 	  copy_file(frompath, topath,boost::filesystem::copy_option::overwrite_if_exists);
 	}
 
-#ifdef BOOST_VERY_OLD
-	string filename2 = itr->path().filename();
-#else
 	string filename2 = itr->path().filename().string();
-#endif
 	string rotsubstrfrom = to_string(oldLast)+"."+to_string(mpigetrank())+".state"+to_string(state)+".tmp";
 	string rotsubstrto   = to_string(newLast)+"."+to_string(mpigetrank())+".state"+to_string(state)+".tmp";
 	std::size_t found2 = filename2.find(rotsubstrfrom);
