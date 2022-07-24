@@ -1855,10 +1855,9 @@ void SpinAdapted::Input::readorbitalsfile(string& orbitalfile, OneElectronArray&
   mpi::broadcast(world,twoIntegralMem,0);
 #endif
 #ifdef NO_SHARED_MEM
-  long integralMemorySize = (oneIntegralMem+twoIntegralMem)*m_num_Integrals;
-  m_IntegralMemoryStart = Stackmem[0].allocate(integralMemorySize);
-  v1.set_data() = (m_IntegralMemoryStart) + (oneIntegralMem+twoIntegralMem)*integralIndex;
-  v2.set_data() = (m_IntegralMemoryStart) + oneIntegralMem + (oneIntegralMem+twoIntegralMem)*integralIndex;
+  double *m_int_start = new double[(oneIntegralMem+twoIntegralMem)*m_num_Integrals];
+  v1.set_data() = (m_int_start) + (oneIntegralMem+twoIntegralMem)*integralIndex;
+  v2.set_data() = (m_int_start) + oneIntegralMem + (oneIntegralMem+twoIntegralMem)*integralIndex;
 #else
   if (m_useSharedMemory) {
     if (integralIndex == 0) {

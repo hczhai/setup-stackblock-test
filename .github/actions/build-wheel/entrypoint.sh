@@ -53,12 +53,17 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
     sed -i '/for soname, src_path/a \                if "libmpi.so" in soname: patcher.replace_needed(fn, soname, "libmpi.so")' \
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
-fi
 
-cd boost_1_63_0
-./b2 install --prefix=$PREFIX
-export BOOSTROOT=$PREFIX
-cd ..
+    cd boost_1_63_0
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi
+    export BOOSTROOT=$PREFIX
+    cd ..
+else
+    cd boost_1_63_0
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization
+    export BOOSTROOT=$PREFIX
+    cd ..
+fi
 
 sed -i '/new_soname = src_name/a \    if any(x in src_name for x in ["libmkl_avx2", "libmkl_avx512"]): new_soname = src_name' \
     $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
