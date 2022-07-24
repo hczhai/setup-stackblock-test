@@ -1,0 +1,3 @@
+include MANIFEST.in LICENSE.txt
+include README.md CMakeLists.txt
+recursive-include modules genetic include newmat10 README CMakeLists.txt makefile Makefile *.h *.C

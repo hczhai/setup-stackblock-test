@@ -1,0 +1,88 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - v*
+      - p*
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build ${{ matrix.python }} ${{ matrix.os }} ${{ matrix.plat }} ${{ matrix.parallel }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        python: [ 3.7, 3.9 ]
+        manylinux: [ 2010 ]
+        plat: [ x86_64 ]
+        parallel: [ mpi, serial ]
+        exclude:
+          - os: macos-latest
+            parallel: mpi
+          - os: ubuntu-latest
+            python: 3.9
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: install requirements
+        env:
+          MKLROOT: ~/.local
+        run: |
+          export PYT=$(which python)
+          python -m pip install pip build twine --upgrade
+          python -m pip install mkl==2019 mkl-include intel-openmp cmake==3.17
+
+      - name: build wheels (macos)
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'macos-latest'
+        env:
+          TAG_STRING: ${{ github.event.ref }}
+        run: |
+          brew update
+          brew install libomp
+          echo ${TAG_STRING:11}
+          sed -i "" "s/version=.*/version='${TAG_STRING:11}',/" setup.py
+          python -m pip install wheel
+          python -m pip wheel . -w ./dist --no-deps
+
+      - name: prepare build wheels (manylinux)
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        env:
+          TAG_STRING: ${{ github.event.ref }}
+        run: |
+          echo ${TAG_STRING:11}
+          sed -i "s/version=.*/version='${TAG_STRING:11}',/" setup.py
+          cp ./.github/actions/build-wheel/Dockerfile.manylinux${{ matrix.manylinux }} ./.github/actions/build-wheel/Dockerfile
+
+      - name: build wheels (manylinux)
+        if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+        uses: ./.github/actions/build-wheel
+        with:
+          python-version: ${{ matrix.python }}
+          parallel: ${{ matrix.parallel }}
+
+      - name: release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+
+      - name: upload artifacts
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-${{ matrix.parallel }}
+          path: dist
+          retention-days: 2
+
