@@ -37,7 +37,7 @@ if [ "${PARALLEL}" = "mpi" ]; then
     cd ..
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     /opt/python/"${PY_VER}"/bin/pip install --no-cache-dir mpi4py
-    sed -i "/DUSE_MKL/a \                '-DMPI=ON'," setup.py
+    sed -i '/DUSE_MKL/a \                "-DMPI=ON",' setup.py
     sed -i "s/name='stackblock'/name='stackblock-mpi'/g" setup.py
     sed -i '/for soname, src_path/a \                if any(x in soname for x in ["libmpi", "libopen-pal", "libopen-rte"]): continue' \
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
@@ -45,7 +45,8 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 fi
 
-sed -i "/DUSE_MKL/a \                '-DBOOST_VERY_OLD=ON'," setup.py
+sed -i '/DUSE_MKL/a \                "-DBOOST_VERY_OLD=ON",' setup.py
+cat setup.py
 sed -i '/new_soname = src_name/a \    if any(x in src_name for x in ["libmkl_avx2", "libmkl_avx512"]): new_soname = src_name' \
     $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 ${PY_EXE} -c 'import site; x = site.getsitepackages(); x += [xx.replace("site-packages", "dist-packages") for xx in x]; print("*".join(x))' > /tmp/ptmp
