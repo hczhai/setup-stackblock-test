@@ -26,7 +26,8 @@ sed -i "/DPYTHON_EXECUTABLE/a \                '-DPYTHON_EXECUTABLE=${PY_EXE}',"
 /opt/python/"${PY_VER}"/bin/pip install --no-cache-dir mkl==2019 mkl-include intel-openmp cmake==3.17
 
 yum install -y wget
-PREFIX=$PWD
+mkdir $PWD/install
+PREFIX=$PWD/install
 wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz
 tar zxf boost_1_76_0.tar.gz
 cd boost_1_76_0
@@ -52,12 +53,10 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 
     cd boost_1_76_0
-    PY_INCLUDE=$(echo /opt/python/${PY_VER}/include/python*)
-    echo "using python : ${PYTHON_VERSION} : /opt/python/${PY_VER} : ${PY_INCLUDE} ;" >> project-config.jam
-    echo "using mpi ;" >> project-config.jam
-    export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:${PY_INCLUDE}"
+    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$(echo /opt/python/${PY_VER}/include/python*)
     bash bootstrap.sh
-    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python
+    echo "using mpi ;" >> project-config.jam
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi
     export BOOSTROOT=$PREFIX
     cd ..
 else
