@@ -34,9 +34,6 @@ bash bootstrap.sh
 cd ..
 
 if [ "${PARALLEL}" = "mpi" ]; then
-    cd boost_1_76_0
-    echo 'using mpi ;' >> project-config.jam
-    cd ..
     yum install -y openssh-clients openssh-server
     wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.6.tar.gz
     tar zxf openmpi-4.0.6.tar.gz
@@ -55,6 +52,12 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 
     cd boost_1_76_0
+    echo "using mpi ;" >> project-config.jam
+    echo "using python : ${PYTHON_VERSION} : /opt/python/${PY_VER} : /opt/python/${PY_VER}/include : /opt/python/${PY_VER}/lib ;" >> project-config.jam
+    echo /opt/python/${PY_VER}
+    ls /opt/python/${PY_VER}
+    ls /opt/python/${PY_VER}/include
+    ls /opt/python/${PY_VER}/lib
     ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python
     export BOOSTROOT=$PREFIX
     cd ..
