@@ -55,11 +55,14 @@ if [ "${PARALLEL}" = "mpi" ]; then
     PY_INCLUDE=$(echo /opt/python/${PY_VER}/include/python*)
     echo "using python : ${PYTHON_VERSION} : /opt/python/${PY_VER} : ${PY_INCLUDE} ;" >> project-config.jam
     echo "using mpi ;" >> project-config.jam
-    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python=python3
+    export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:${PY_INCLUDE}"
+    bash bootstrap.sh
+    ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization --with-mpi --with-python
     export BOOSTROOT=$PREFIX
     cd ..
 else
     cd boost_1_76_0
+    bash bootstrap.sh
     ./b2 install --prefix=$PREFIX --with-filesystem --with-system --with-serialization
     export BOOSTROOT=$PREFIX
     cd ..
