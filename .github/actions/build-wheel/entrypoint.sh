@@ -24,6 +24,7 @@ sed -i "/DPYTHON_EXECUTABLE/a \                '-DPYTHON_EXECUTABLE=${PY_EXE}',"
 
 /opt/python/"${PY_VER}"/bin/pip install --upgrade --no-cache-dir pip
 /opt/python/"${PY_VER}"/bin/pip install --no-cache-dir mkl==2019 mkl-include intel-openmp cmake==3.17
+yum install -y boost-devel
 
 if [ "${PARALLEL}" = "mpi" ]; then
     # yum makecache
