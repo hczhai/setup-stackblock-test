@@ -31,9 +31,12 @@ wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76
 tar zxf boost_1_76_0.tar.gz
 cd boost_1_76_0
 bash bootstrap.sh
+cd ..
 
 if [ "${PARALLEL}" = "mpi" ]; then
+    cd boost_1_76_0
     echo 'using mpi ;' >> project-config.jam
+    cd ..
     yum install -y openssh-clients openssh-server
     wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.6.tar.gz
     tar zxf openmpi-4.0.6.tar.gz
@@ -52,6 +55,7 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 fi
 
+cd boost_1_76_0
 ./b2 install --prefix=$PREFIX
 export BOOSTROOT=~/program/boost-1.76
 cd ..
