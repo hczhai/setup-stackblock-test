@@ -23,7 +23,7 @@ jobs:
         manylinux: [ 2010 ]
         plat: [ x86_64 ]
         parallel:
-          - [serial, 0]
+          - [serial, '']
           - [mpi, 2.0.4]
           - [mpi, 3.0.6]
           - [mpi, 3.1.6]

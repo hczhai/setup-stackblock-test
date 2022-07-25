@@ -90,12 +90,13 @@ class CMakeBuild(build_ext):
             ]
 
             if ext.name == "block.oh":
-                cmake_args += ['-DBUILD_OH=ON']
+                cmake_args += ['-DBUILD_OH=ON', '-DBUILD_READROT=OFF', '-DBUILD_GAOPT=OFF']
             elif ext.name == "block.read_rot":
-                cmake_args += ['-DBUILD_READROT=ON']
+                cmake_args += ['-DBUILD_OH=OFF', '-DBUILD_READROT=ON', '-DBUILD_GAOPT=OFF']
             elif ext.name == "block.gaopt":
-                cmake_args += ['-DBUILD_GAOPT=ON']
+                cmake_args += ['-DBUILD_OH=OFF', '-DBUILD_READROT=OFF', '-DBUILD_GAOPT=ON']
             else:
+                cmake_args += ['-DBUILD_OH=OFF', '-DBUILD_READROT=OFF', '-DBUILD_GAOPT=OFF']
                 assert ext.name == "block.spin_adapted"
 
             # We can handle some platform-specific settings at our discretion
