@@ -89,6 +89,15 @@ class CMakeBuild(build_ext):
                 '-DUSE_MKL=ON',
             ]
 
+            if ext.name == "block.oh":
+                cmake_args += ['-DBUILD_OH=ON']
+            elif ext.name == "block.read_rot":
+                cmake_args += ['-DBUILD_READROT=ON']
+            elif ext.name == "block.gaopt":
+                cmake_args += ['-DBUILD_GAOPT=ON']
+            else:
+                assert ext.name == "block.spin_adapted"
+
             # We can handle some platform-specific settings at our discretion
             if platform.system() == 'Windows':
                 plat = ('x64' if platform.architecture()
@@ -124,15 +133,20 @@ build.sub_commands = ([c for c in build.sub_commands if c[0] == 'build_ext'] +
                       [c for c in build.sub_commands if c[0] != 'build_ext'])
 
 setup(name='stackblock',
-    version='0.0.1',
+    version='1.5.3',
     packages=find_packages(),
-    ext_modules=[CMakeExt('block.spin_adapted')],
+    ext_modules=[
+        CMakeExt("block.spin_adapted"),
+        CMakeExt("block.oh"),
+        CMakeExt("block.read_rot"),
+        CMakeExt("block.gaopt")
+    ],
     cmdclass={'build_ext': CMakeBuild, 'build_scripts': BinBuild},
     license='LICENSE',
-    description="stackblock",
+    description="BLOCK implements the density matrix renormalization group (DMRG) algorithm for quantum chemistry.",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    author='Unknown',
-    scripts=["block.spin_adapted"],
-    install_requires=[]
+    author='S. Sharma and G. K-.L. Chan',
+    scripts=["block.spin_adapted", "block.oh", "block.read_rot", "block.gaopt"],
+    install_requires=["mkl==2019", "intel-openmp"]
 )

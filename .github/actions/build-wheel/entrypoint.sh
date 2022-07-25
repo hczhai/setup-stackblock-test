@@ -48,7 +48,7 @@ if [ "${PARALLEL}" = "mpi" ]; then
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     /opt/python/"${PY_VER}"/bin/pip install --no-cache-dir mpi4py
     sed -i '/DUSE_MKL/a \                "-DMPI=ON",' setup.py
-    sed -i "s/name='stackblock'/name='stackblock-mpi'/g" setup.py
+    sed -i "s/name='stackblock'/name='stackblock-mpi${MPI_VER}'/g" setup.py
     sed -i '/for soname, src_path/a \                if any(x in soname for x in ["libmpi", "libopen-pal", "libopen-rte"]): continue' \
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
     sed -i '/for soname, src_path/a \                if "libmpi.so" in soname: patcher.replace_needed(fn, soname, "libmpi.so")' \
