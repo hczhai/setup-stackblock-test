@@ -25,6 +25,7 @@
 #ifndef SERIAL
 #include "mpi.h"
 #include <boost/mpi.hpp>
+#endif
 #include "readrotationmatrix.h"
 #include "sweep.h"
 #include "Stackdensity.h"
@@ -32,7 +33,6 @@
 #include "Stackwavefunction.h"
 #include "stackguess_wavefunction.h"
 #include "operatorfunctions.h"
-#endif
 
 void ReadInput(char* conf);
 void restart(double sweep_tol, bool reset_iter);
