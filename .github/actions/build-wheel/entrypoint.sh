@@ -51,6 +51,8 @@ if [ "${PARALLEL}" = "mpi" ]; then
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
     sed -i '/for soname, src_path/a \                if "libmpi.so" in soname: patcher.replace_needed(fn, soname, "libmpi.so")' \
         $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
+    sed -i '/for n in needed/a \                if "libmpi.so" in n: patcher.replace_needed(path, n, "libmpi.so")' \
+        $($(cat $(which auditwheel) | head -1 | awk -F'!' '{print $2}') -c "from auditwheel import repair;print(repair.__file__)")
 
     cd boost_1_76_0
     export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$(echo /opt/python/${PY_VER}/include/python*)
