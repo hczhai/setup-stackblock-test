@@ -2,6 +2,22 @@
 
 `BLOCK` implements the density matrix renormalization group (DMRG) algorithm for quantum chemistry.
 
+Quick Installation
+------------------
+
+One can find a suitable ``whl`` file on the release page https://github.com/hczhai/StackBlock/releases/latest,
+depending on the python version and the openmpi version (when the ``whl`` filename includes ``mpi``). Then run
+
+	python3 -m pip install https://github.com/hczhai/StackBlock/releases/download/.../stackblock_xxx_x86_64.whl
+
+To uninstall, run
+
+	python3 -m pip uninstall stackblock
+
+or
+
+	python3 -m pip uninstall stackblock-mpix.x
+
 Build Block
 -----------
 

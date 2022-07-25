@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
-        python: [ 3.7, 3.9 ]
+        python: [ 3.7, 3.8, 3.9, 3.10 ]
         manylinux: [ 2010 ]
         plat: [ x86_64 ]
         parallel:
@@ -40,8 +40,6 @@ jobs:
             parallel: [mpi, 4.0.6]
           - os: macos-latest
             parallel: [mpi, 4.1.4]
-          - os: ubuntu-latest
-            python: 3.9
       fail-fast: false
 
     steps:
