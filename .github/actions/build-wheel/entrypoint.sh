@@ -6,6 +6,8 @@ cd /github/workspace
 
 PYTHON_VERSION=$1
 PARALLEL=$2
+MPI_VERSION=$3
+MPI_VER=${MPI_VERSION:0:3}
 
 if [ "${PYTHON_VERSION}" = "3.6" ]; then
     PY_VER=cp36-cp36m
@@ -36,9 +38,9 @@ cd ..
 
 if [ "${PARALLEL}" = "mpi" ]; then
     yum install -y openssh-clients openssh-server
-    wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.6.tar.gz
-    tar zxf openmpi-4.0.6.tar.gz
-    cd openmpi-4.0.6
+    wget https://download.open-mpi.org/release/open-mpi/v${MPI_VER}/openmpi-${MPI_VERSION}.tar.gz
+    tar zxf openmpi-${MPI_VERSION}.tar.gz
+    cd openmpi-${MPI_VERSION}
     ./configure --prefix=/usr/local |& tee config.out
     make -j 4 |& tee make.out
     make install |& tee install.out

@@ -7,12 +7,16 @@ inputs:
   parallel:
     required: false
     default: 'serial'
+  mpiver:
+    required: false
+    default: '4.0.6'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.python-version }}
     - ${{ inputs.parallel }}
+    - ${{ inputs.mpiver }}
 branding:
   icon: 'package'
   color: 'green'
